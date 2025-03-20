@@ -8,7 +8,7 @@ public class iPhone : Phones
         imagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\OOP_Lab1\\OOP_Lab1\\OOP_Lab1\\images\\iphone_14_pro_max.jpg";
         color = "Space Grey";
         model = "iPhone 14 Pro Max";
-        price = 1500;
+        price = 1400;
         hasAI = false;
     }
 }
