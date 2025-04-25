@@ -38,6 +38,7 @@ partial class Form1
         label3 = new System.Windows.Forms.Label();
         label4 = new System.Windows.Forms.Label();
         label5 = new System.Windows.Forms.Label();
+        MyPhonesButton = new System.Windows.Forms.Button();
         ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
         ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
         ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -117,11 +118,23 @@ partial class Form1
         label5.TabIndex = 9;
         label5.Text = "label5";
         // 
+        // MyPhonesButton
+        // 
+        MyPhonesButton.Font = new System.Drawing.Font("Segoe UI", 14F);
+        MyPhonesButton.Location = new System.Drawing.Point(448, 566);
+        MyPhonesButton.Name = "MyPhonesButton";
+        MyPhonesButton.Size = new System.Drawing.Size(392, 87);
+        MyPhonesButton.TabIndex = 10;
+        MyPhonesButton.Text = "Мои телефоны";
+        MyPhonesButton.UseVisualStyleBackColor = true;
+        MyPhonesButton.Click += MyPhonesButtonClick;
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(1277, 788);
+        ClientSize = new System.Drawing.Size(1277, 694);
+        Controls.Add(MyPhonesButton);
         Controls.Add(label5);
         Controls.Add(label4);
         Controls.Add(label3);
@@ -139,6 +152,8 @@ partial class Form1
         ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.Button MyPhonesButton;
 
     private System.Windows.Forms.PictureBox pictureBox2;
     private System.Windows.Forms.PictureBox pictureBox3;

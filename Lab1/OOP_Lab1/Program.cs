@@ -13,4 +13,6 @@ static class Program
         ApplicationConfiguration.Initialize();
         Application.Run(new Form1());
     }
+    
+    public static List<Phones.Phones> phonesList = new List<Phones.Phones>();
 }

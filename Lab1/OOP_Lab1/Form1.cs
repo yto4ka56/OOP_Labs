@@ -1,5 +1,4 @@
- using OOP_Lab1.Phones.Android;
- using OOP_Lab1.Phones.iPhone;
+ using OOP_Lab1.Phones;
 
  namespace OOP_Lab1;
 
@@ -42,10 +41,13 @@ public partial class Form1 : Form
 
     private void printInfo(Phones.Phones phone, PictureBox pictureBox, Label label)
     {
-        label.Text = phone.model +"\n"+ phone.color + "\n" + phone.price;
+        label.Text = phone.model;
         pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
         pictureBox.Image = Image.FromFile(phone.imagePath);
     }
-    
-    
+    private void MyPhonesButtonClick(object sender, EventArgs e)
+    {
+        ShowPhonesForm showPhonesForm = new ShowPhonesForm();
+        showPhonesForm.ShowDialog();
+    }
 }
