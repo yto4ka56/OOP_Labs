@@ -4,6 +4,12 @@ namespace OOP_Lab1;
 
 public partial class AddPhoneForm : Form
 {
+    
+    public static string[] PhoneTypeNames = typeof(Phones.Phone).Assembly.GetTypes()  
+        .Where(t => t.IsSubclassOf(typeof(Phones.Phone)) && !t.IsAbstract) 
+        .Select(t => t.Name)
+        .ToArray();
+    
     private Type phoneType;
     private Form1 mainForm;
     
@@ -15,11 +21,7 @@ public partial class AddPhoneForm : Form
     
      private void LoadPhonesTypes()
     {
-        var phonesTypes = typeof(Phones.Phones).Assembly.GetTypes()  
-            .Where(t => t.IsSubclassOf(typeof(Phones.Phones)) && !t.IsAbstract) //  наследники Flower
-            .Select(t => t.Name)
-            .ToArray();
-        phonesComboBox.Items.AddRange(phonesTypes);
+        phonesComboBox.Items.AddRange(PhoneTypeNames);
     }
 
     private Dictionary<string, object> GetProperties(Type type)
@@ -83,12 +85,23 @@ public partial class AddPhoneForm : Form
         return false; 
     }
 
+    /*private bool IsTypeAlreadyLoaded(Type type)
+    {
+        // все типы из текущей сборки
+        var loadedTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .ToList();
+
+        // существует ли уже тип с таким именем
+        return loadedTypes.Any(t => t == type);
+    }*/
     
     private void AddButtonClick(object sender, EventArgs e)
     {
         string stringType = phonesComboBox.SelectedItem.ToString() ?? string.Empty;
-
-        Type phonesType = Type.GetType("OOP_Lab1.Phones." + stringType) ?? typeof(object);
+        
+        Type phonesType = Type.GetType("OOP_Lab1.Phones." + stringType) ?? ShowPhonesForm.PluginAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == stringType && typeof(Phones.Phone).IsAssignableFrom(t)) ?? typeof(object);
         Dictionary<string, object> properties = GetProperties(phonesType);
         object phonesInstance = Activator.CreateInstance(phonesType) ;
 
@@ -115,7 +128,7 @@ public partial class AddPhoneForm : Form
 
         if (!hasError)
         {
-            Program.phonesList.Add((Phones.Phones)phonesInstance);
+            Program.phonesList.Add((Phones.Phone)phonesInstance);
             Close();
         }
 
@@ -225,7 +238,7 @@ public partial class AddPhoneForm : Form
         string stringType = phonesComboBox.SelectedItem.ToString() ?? string.Empty;
         if (stringType != string.Empty)
         {
-            Type phonesType = Assembly.GetExecutingAssembly().GetType("OOP_Lab1.Phones." + stringType) ?? typeof(Phones.Phones);
+            Type phonesType = Assembly.GetExecutingAssembly().GetType("OOP_Lab1.Phones." + stringType) ?? typeof(Phones.Phone);
             
             List<PropertyInfo> propNames = phonesType.GetProperties(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy

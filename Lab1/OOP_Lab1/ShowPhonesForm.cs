@@ -1,4 +1,8 @@
-﻿namespace OOP_Lab1;
+﻿using System.Runtime.Serialization;
+using OOP_Lab1.Phones;
+
+namespace OOP_Lab1;
+using System.Reflection;
 
 public partial class ShowPhonesForm : Form
 {
@@ -7,8 +11,9 @@ public partial class ShowPhonesForm : Form
         InitializeComponent();
     }
     
-     private Stack<List<Phones.Phones>> undoStack = new Stack<List<Phones.Phones>>();
-    private Stack<List<Phones.Phones>> redoStack = new Stack<List<Phones.Phones>>();
+    private Stack<List<Phones.Phone>> undoStack = new Stack<List<Phones.Phone>>();
+    private Stack<List<Phones.Phone>> redoStack = new Stack<List<Phones.Phone>>();
+    public static Assembly PluginAssembly = Assembly.GetExecutingAssembly();
     private void LoadImages()
     {
         int imgKey = 0;
@@ -20,7 +25,7 @@ public partial class ShowPhonesForm : Form
         }
     }
 
-    private void CheckEnabled(ToolStripMenuItem button, Stack<List<Phones.Phones>> stack)
+    private void CheckEnabled(ToolStripMenuItem button, Stack<List<Phones.Phone>> stack)
     {
         if (stack.Count > 0)
         {
@@ -34,14 +39,16 @@ public partial class ShowPhonesForm : Form
     
     private void SaveState()
     {
-        List<Phones.Phones> copy = new List<Phones.Phones>(Program.phonesList.Count);
-        foreach (Phones.Phones phone in Program.phonesList)
+        List<Phones.Phone> copy = new List<Phones.Phone>(Program.phonesList.Count);
+        foreach (Phones.Phone phone in Program.phonesList)
         {
-            copy.Add(phone);
+            Phones.Phone phoneCopy = phone.Clone();
+            copy.Add(phoneCopy);
         }
         undoStack.Push(copy);
         
-        CheckEnabled(undoButton, undoStack);
+        //undoStack.Push(new List<Phones.Phones>(Program.phonesList));
+        CheckEnabled(undo, undoStack);
         CheckEnabled(redoButton, redoStack);
 
     }
@@ -118,15 +125,17 @@ public partial class ShowPhonesForm : Form
     {
         if (undoStack.Count > 0)
         {
-            List<Phones.Phones> copy = new List<Phones.Phones>(Program.phonesList.Count);
-            foreach (Phones.Phones phone in Program.phonesList)
+            List<Phones.Phone> copy = new List<Phones.Phone>(Program.phonesList.Count);
+            foreach (Phones.Phone phone in Program.phonesList)
             {
-                copy.Add(phone);
+                Phone phoneCopy = phone.Clone(); 
+                copy.Add(phoneCopy);
             }
             redoStack.Push(copy); // Сохраняем текущее состояние
+            //redoStack.Push(Program.phonesList);
             Program.phonesList = undoStack.Pop(); // Откатываем предыдущее состояние
             UpdateListView();
-            CheckEnabled(undoButton, undoStack);
+            CheckEnabled(undo, undoStack);
             CheckEnabled(redoButton, redoStack);
         }
     }
@@ -135,18 +144,18 @@ public partial class ShowPhonesForm : Form
     {
         if (redoStack.Count > 0)
         {
-            List<Phones.Phones> copy = new List<Phones.Phones>(Program.phonesList.Count);
-            foreach (Phones.Phones phone in Program.phonesList)
+            List<Phones.Phone> copy = new List<Phones.Phone>(Program.phonesList.Count);
+            foreach (Phones.Phone phone in Program.phonesList)
             {
-                copy.Add(phone);
+                Phone phoneCopy = phone.Clone();
+                copy.Add(phoneCopy);
             }
-
-            
             
             undoStack.Push(copy); // Сохраняем текущее состояние
+            //undoStack.Push(Program.phonesList);
             Program.phonesList = redoStack.Pop(); // Восстанавливаем состояние
             UpdateListView();
-            CheckEnabled(undoButton, undoStack);
+            CheckEnabled(undo, undoStack);
             CheckEnabled(redoButton, redoStack);
         }
     }
@@ -179,5 +188,53 @@ public partial class ShowPhonesForm : Form
     {
         LoadImages();
         AddAllPhones();
+    }
+
+    private void saveFileButton_Click(object sender, EventArgs e)
+    {
+        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            PhoneJsonSerializer serializer = new PhoneJsonSerializer();
+            serializer.Serialize(Program.phonesList, saveFileDialog.FileName + ".json");
+        }
+    }
+
+    private void openFileButton_Click(object sender, EventArgs e)
+    {
+        SaveState();
+        try
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                PhoneJsonSerializer deserializer = new PhoneJsonSerializer();
+                Program.phonesList = deserializer.Deserialize(openFileDialog.FileName);
+                UpdateListView();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при десериализации: {ex.Message}", "Ошибка", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
+
+    private void addClassButton_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog openFileDialogDll = new OpenFileDialog();
+        openFileDialogDll.Filter = "DLL files (*.dll)|*.dll";
+        openFileDialogDll.Title = "Выберите DLL плагина";
+
+        if (openFileDialogDll.ShowDialog() == DialogResult.OK)
+        {
+            PluginAssembly = Assembly.LoadFrom(openFileDialogDll.FileName);
+            var pluginTypes = PluginAssembly.GetTypes()
+                .Where(t => typeof(Phone).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            AddPhoneForm.PhoneTypeNames = AddPhoneForm.PhoneTypeNames
+                .Concat(pluginTypes
+                    .Where(t => !AddPhoneForm.PhoneTypeNames.Contains(t.Name))  // Проверка на существование
+                    .Select(t => t.Name))
+                .ToArray();
+
+        }
     }
 }

@@ -24,9 +24,9 @@ public partial class Form1 : Form
             label5
         };
 
-        List<Phones.Phones> phonesList = new List<Phones.Phones>()
+        List<Phone> phonesList = new List<Phone>()
         {
-            new iPhone(),
+            new IPhone(),
             new Samsung(),
             new Huawei(),
             new GooglePixel()
@@ -39,7 +39,7 @@ public partial class Form1 : Form
         
     }
 
-    private void printInfo(Phones.Phones phone, PictureBox pictureBox, Label label)
+    private void printInfo(Phone phone, PictureBox pictureBox, Label label)
     {
         label.Text = phone.model;
         pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;

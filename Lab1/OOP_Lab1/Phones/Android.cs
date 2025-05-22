@@ -1,6 +1,6 @@
 ﻿namespace OOP_Lab1.Phones;
 
-abstract class Android : Phones
+abstract class Android : Phone
 {
     public string companyName{ get; set; }
     public int storage{ get; set; }

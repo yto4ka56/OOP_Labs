@@ -1,11 +1,11 @@
 ﻿namespace OOP_Lab1.Phones;
 
-class iPhone : Phones
+class IPhone : Phone
 {
     public bool hasAI{ get; set; }
-    public iPhone()
+    public IPhone()
     {
-        imagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\OOP_Lab1\\OOP_Lab1\\OOP_Lab1\\images\\iphone_14_pro_max.jpg";
+        imagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\Lab1\\OOP_Lab1\\images\\iphone_14_pro_max.jpg";
         //color = "Space Grey";
         model = "iPhone 14 Pro Max";
         newImagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\Lab1\\OOP_Lab1\\images\\apple_logo.png";
@@ -13,7 +13,7 @@ class iPhone : Phones
         hasAI = false;*/
     }
 
-    public iPhone(bool hasAI)
+    public IPhone(bool hasAI)
     {
         hasAI = hasAI;
     }
@@ -22,4 +22,6 @@ class iPhone : Phones
     {
         return base.ToString() + $", HasAI: {hasAI}";
     }
+
+    public override Phone Clone() => (Phone)MemberwiseClone();
 }

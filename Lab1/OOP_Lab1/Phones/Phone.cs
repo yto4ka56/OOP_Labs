@@ -1,6 +1,8 @@
 ﻿namespace OOP_Lab1.Phones;
 
-public abstract class Phones
+[Serializable]
+
+public abstract class Phone
 {
     public string color { get; set; }
     public int price{ get; set; }
@@ -10,12 +12,14 @@ public abstract class Phones
 
     public static int CountPhones { get; private set; } = 0;
 
-    public Phones()
+    public Phone()
     {
         CountPhones++;
     }
 
-    static Phones()
+    public abstract Phone Clone();
+
+    static Phone()
     {
         CountPhones = 0;
     }

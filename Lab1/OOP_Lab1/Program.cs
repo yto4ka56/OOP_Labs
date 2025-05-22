@@ -14,5 +14,5 @@ static class Program
         Application.Run(new Form1());
     }
     
-    public static List<Phones.Phones> phonesList = new List<Phones.Phones>();
+    public static List<Phones.Phone> phonesList = new List<Phones.Phone>();
 }

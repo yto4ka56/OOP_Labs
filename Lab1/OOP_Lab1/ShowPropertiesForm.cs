@@ -2,12 +2,12 @@
 
 public partial class ShowPropertiesForm : Form
 {
-    private Phones.Phones currPhone;
+    private Phones.Phone _currPhone;
 
-    public ShowPropertiesForm(Phones.Phones phone)
+    public ShowPropertiesForm(Phones.Phone phone)
     {
         InitializeComponent();
-        currPhone = phone;
-        InfoLabel.Text = currPhone.ToString();
+        _currPhone = phone;
+        InfoLabel.Text = _currPhone.ToString();
     }
 }

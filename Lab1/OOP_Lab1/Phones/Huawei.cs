@@ -7,9 +7,11 @@ class Huawei : Android
       /*storage = 256;
       color = "Green";
       price = 400;*/
-      imagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\OOP_Lab1\\OOP_Lab1\\OOP_Lab1\\images\\huawei.jpg";
+      imagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\Lab1\\OOP_Lab1\\images\\huawei.jpg";
       //companyName = "Huawei";
       newImagePath = "C:\\Users\\maxbe\\OneDrive\\Документы\\OOP\\Lab1\\OOP_Lab1\\images\\huawei_logo.png";
       model = "Huawei Nova 13";
    } 
+   
+   public override Phone Clone() => (Phone)MemberwiseClone();
 }

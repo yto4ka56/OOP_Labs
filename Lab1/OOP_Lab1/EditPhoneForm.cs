@@ -4,20 +4,20 @@ namespace OOP_Lab1;
 
 public partial class EditPhoneForm : Form
 {
-    private Phones.Phones currPhone;
+    private Phones.Phone _currPhone;
     
-    public EditPhoneForm(Phones.Phones phone)
+    public EditPhoneForm(Phones.Phone phone)
     {
-        currPhone = phone;
+        _currPhone = phone;
         InitializeComponent();
     }
     
     private void EditPhoneFormLoad(object sender, EventArgs e)
     {
-        NameLabel.Text = currPhone.model;
-        List<PropertyInfo> propNames = currPhone.GetType()
+        NameLabel.Text = _currPhone.model;
+        List<PropertyInfo> propNames = _currPhone.GetType()
             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-            .Where(prop => prop.Name != nameof(currPhone.newImagePath) && prop.Name != nameof(currPhone.imagePath))
+            .Where(prop => prop.Name != nameof(_currPhone.newImagePath) && prop.Name != nameof(_currPhone.imagePath))
             .ToList();
         
         AddProperties(propNames);
@@ -121,7 +121,7 @@ public partial class EditPhoneForm : Form
 
             if (control != null)
             {
-                object value = prop.GetValue(currPhone);
+                object value = prop.GetValue(_currPhone);
                 if (control is TextBox textBox)
                 {
                     textBox.Text = value?.ToString() ?? "";
@@ -152,11 +152,11 @@ public partial class EditPhoneForm : Form
 
     private void SaveButtonClick(object sender, EventArgs e)
     {
-        if (!HasEmptyFields(currPhone))
+        if (!HasEmptyFields(_currPhone))
         {
-            List<PropertyInfo> propNames = currPhone.GetType()
+            List<PropertyInfo> propNames = _currPhone.GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                .Where(prop => prop.Name != nameof(currPhone.newImagePath) && prop.Name != nameof(currPhone.imagePath))
+                .Where(prop => prop.Name != nameof(_currPhone.newImagePath) && prop.Name != nameof(_currPhone.imagePath))
                 .ToList();
 
             Panel panel = Controls.OfType<Panel>().FirstOrDefault(p => p.Name == "propertiesPanel");
@@ -174,12 +174,12 @@ public partial class EditPhoneForm : Form
                         if (control is TextBox textBox)
                         {
                             object convertedValue = Convert.ChangeType(textBox.Text, prop.PropertyType);
-                            prop.SetValue(currPhone, convertedValue);
+                            prop.SetValue(_currPhone, convertedValue);
                         }
                         else if (control is ComboBox comboBox)
                         {
                             object convertedValue = Convert.ChangeType(comboBox.SelectedItem, prop.PropertyType);
-                            prop.SetValue(currPhone, convertedValue);
+                            prop.SetValue(_currPhone, convertedValue);
                         }
                     }
                     catch (Exception ex)

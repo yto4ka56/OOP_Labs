@@ -1,6 +1,9 @@
-﻿namespace OOP_Lab1.serialization;
+﻿using OOP_Lab1.Phones;
 
-public class Serialization
+namespace OOP_Lab1;
+
+public interface ISerializer
 {
-    
+    void Serialize(List<Phone> phones, string filePath);
+    List<Phone> Deserialize(string filePath);
 }
