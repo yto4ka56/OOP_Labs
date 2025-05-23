@@ -1,6 +1,7 @@
-﻿namespace OOP_Lab1.Phones;
+﻿
 
-[Serializable]
+namespace OOP_Lab1.Phones;
+
 
 public abstract class Phone
 {
@@ -10,19 +11,14 @@ public abstract class Phone
     public string newImagePath { get; set; }
     public string model{ get; set; }
 
-    public static int CountPhones { get; private set; } = 0;
-
+   // public static int CountPhones { get; private set; } = 0;
+   
     public Phone()
     {
-        CountPhones++;
+        //CountPhones++;
     }
 
     public abstract Phone Clone();
-
-    static Phone()
-    {
-        CountPhones = 0;
-    }
 
     public override string ToString()
     {

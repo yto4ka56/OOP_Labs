@@ -223,6 +223,7 @@ partial class ShowPhonesForm
         AddActionButton.TabIndex = 8;
         AddActionButton.Text = "Добавить действие";
         AddActionButton.UseVisualStyleBackColor = true;
+        AddActionButton.Click += AddActionButton_Click;
         // 
         // ShowPhonesForm
         // 

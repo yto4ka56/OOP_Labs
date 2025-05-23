@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using OOP_Lab1.Phones;
+using serialization;
 
 namespace OOP_Lab1;
 using System.Reflection;
@@ -37,7 +38,7 @@ public partial class ShowPhonesForm : Form
         }
     }
     
-    private void SaveState()
+    public void SaveState()
     {
         List<Phones.Phone> copy = new List<Phones.Phone>(Program.phonesList.Count);
         foreach (Phones.Phone phone in Program.phonesList)
@@ -192,21 +193,25 @@ public partial class ShowPhonesForm : Form
 
     private void saveFileButton_Click(object sender, EventArgs e)
     {
+        /*if (saveFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            Serialization serializer = new Serialization();
+            serializer.Serialize(Program.phonesList, saveFileDialog.FileName + ".json");
+        }*/
         if (saveFileDialog.ShowDialog() == DialogResult.OK)
         {
-            PhoneJsonSerializer serializer = new PhoneJsonSerializer();
-            serializer.Serialize(Program.phonesList, saveFileDialog.FileName + ".json");
+            Serialization.Serialize(saveFileDialog.FileName);
         }
     }
 
     private void openFileButton_Click(object sender, EventArgs e)
     {
         SaveState();
-        try
+        /*try
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                PhoneJsonSerializer deserializer = new PhoneJsonSerializer();
+                Serialization deserializer = new Serialization();
                 Program.phonesList = deserializer.Deserialize(openFileDialog.FileName);
                 UpdateListView();
             }
@@ -215,6 +220,10 @@ public partial class ShowPhonesForm : Form
         {
             MessageBox.Show($"Ошибка при десериализации: {ex.Message}", "Ошибка", MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+        }*/
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            Serialization.Deserialize(openFileDialog.FileName);
         }
     }
 
@@ -235,6 +244,28 @@ public partial class ShowPhonesForm : Form
                     .Select(t => t.Name))
                 .ToArray();
 
+        }
+    }
+
+    private void AddActionButton_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog openFileDialogDll = new OpenFileDialog();
+        openFileDialogDll.Filter = "DLL files (*.dll)|*.dll";
+        openFileDialogDll.Title = "Выберите DLL плагина";
+        if (openFileDialogDll.ShowDialog() == DialogResult.OK)
+        {
+            Assembly.LoadFrom(openFileDialogDll.FileName);
+
+            System.Type[] allTypes = Types.Types.GetTypes();
+            var baseType = typeof(ISerializer);
+            foreach (var type in allTypes)
+            {
+                if (!type.IsInterface && baseType.IsAssignableFrom(type))
+                {
+                    Serialization.extraSerialize = (Serialization.ExtraSerialize)type.GetMethod("Serialize")!.CreateDelegate(typeof(Serialization.ExtraSerialize));
+                    Serialization.extraDeserialize = (Serialization.ExtraDeserialize)type.GetMethod("Deserialize")!.CreateDelegate(typeof(Serialization.ExtraDeserialize));
+                }
+            }
         }
     }
 }

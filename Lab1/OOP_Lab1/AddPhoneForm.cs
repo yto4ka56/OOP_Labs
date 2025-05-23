@@ -84,17 +84,6 @@ public partial class AddPhoneForm : Form
         }
         return false; 
     }
-
-    /*private bool IsTypeAlreadyLoaded(Type type)
-    {
-        // все типы из текущей сборки
-        var loadedTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes())
-            .ToList();
-
-        // существует ли уже тип с таким именем
-        return loadedTypes.Any(t => t == type);
-    }*/
     
     private void AddButtonClick(object sender, EventArgs e)
     {

@@ -4,6 +4,6 @@ namespace OOP_Lab1;
 
 public interface ISerializer
 {
-    void Serialize(List<Phone> phones, string filePath);
-    List<Phone> Deserialize(string filePath);
+    public static void Serialize(List<Phone> phones, FileStream fileStream) {}
+    public static void Deserialize(List<Phone> phones, FileStream fileStream) {}
 }
